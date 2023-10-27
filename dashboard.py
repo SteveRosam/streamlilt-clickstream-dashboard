@@ -8,10 +8,15 @@ import streamlit as st
 
 # Basic configuration of the Streamlit dashboard
 st.set_page_config(
-    page_title="Real-Time User Stats Dashboard",
+    page_title="Real-Time User Stats Dashboard (Quix)",
     page_icon="✅",
     layout="wide",
+    menu_items={
+        'About': "This dashboard shows real-time user stats the Clickstream template. More info at https://quix.io"
+    }
 )
+
+st.header("Real-Time User Stats Dashboard", divider="blue")
 
 r = redis.Redis(
     host=st.secrets.redis_host,
@@ -21,43 +26,45 @@ r = redis.Redis(
 
 # DASHBOARD LAYOUT SECTION
 # The dashboard layout will consist of 3 columns and two rows.
-col11, col12, col13 = st.columns(3)
-with col11:
-    # Header of the first column
-    st.markdown("### Average visits in the last 15 minutes")
-    # A placeholder for the first chart to update it later with data
-    placeholder_col11 = st.empty()
+with st.container():
+    col11, col12, col13 = st.columns(3)
+    with col11:
+        # Header of the first column
+        st.header("Visitors in the last 15 minutes")
+        # A placeholder for the first chart to update it later with data
+        placeholder_col11 = st.empty()
 
-with col12:
-    # Header of the second column
-    st.markdown("### Sessions in the last 8 hours")
-    # A placeholder for the second chart to update it later with data
-    placeholder_col12 = st.empty()
+    with col12:
+        # Header of the second column
+        st.header("Sessions in the last 8 hours")
+        # A placeholder for the second chart to update it later with data
+        placeholder_col12 = st.empty()
 
-with col13:
-    # Header of the second column
-    st.markdown("### Right now")
-    # A placeholder for the second chart to update it later with data
-    placeholder_col13 = st.empty()
+    with col13:
+        # Header of the second column
+        st.header("Right now")
+        # A placeholder for the second chart to update it later with data
+        placeholder_col13 = st.empty()
 
-col21, col22, col23 = st.columns(3)
-with col11:
-    # Header of the first column
-    st.markdown("### Top 10 viewed pages in the last hour")
-    # A placeholder for the first chart to update it later with data
-    placeholder_col21 = st.empty()
+with st.container():
+    col21, col22, col23 = st.columns(3)
+    with col21:
+        # Header of the first column
+        st.header("Top 10 viewed pages in the last hour")
+        # A placeholder for the first chart to update it later with data
+        placeholder_col21 = st.empty()
 
-with col12:
-    # Header of the second column
-    st.markdown("### Latest Visitor Details")
-    # A placeholder for the second chart to update it later with data
-    placeholder_col22 = st.empty()
+    with col22:
+        # Header of the second column
+        st.header("Latest Visitor Details")
+        # A placeholder for the second chart to update it later with data
+        placeholder_col22 = st.empty()
 
-with col13:
-    # Header of the second column
-    st.markdown("### Category popularity in the Last Hour")
-    # A placeholder for the second chart to update it later with data
-    placeholder_col23 = st.empty()
+    with col23:
+        # Header of the second column
+        st.header("Category popularity in the Last Hour")
+        # A placeholder for the second chart to update it later with data
+        placeholder_col23 = st.empty()
 
 # A placeholder for the raw data table
 placeholder_raw = st.empty()
@@ -83,7 +90,7 @@ while True:
         fig = px.line(df, x="datetime", y="count", height=310)
         fig.update_xaxes(title_text='Time', tickformat='%H:%M')
         fig.update_yaxes(title_text='Visits', range=[0, max(1, max(df['count']))])  # Set y minimum always 0
-        st.plotly_chart(fig)
+        st.plotly_chart(fig, use_container_width=True)
 
     with placeholder_col12.container():
         # Sessions in the last 8 hours (segmented by 30 mins)
